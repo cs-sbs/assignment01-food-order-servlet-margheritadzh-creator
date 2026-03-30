@@ -1,10 +1,12 @@
 package cs.sbs.web.servlet;
 
 import cs.sbs.web.model.Order;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
-import java.util.*;
 
 public class OrderDetailServlet extends HttpServlet {
 
@@ -15,62 +17,41 @@ public class OrderDetailServlet extends HttpServlet {
         resp.setContentType("text/plain; charset=UTF-8");
         req.setCharacterEncoding("UTF-8");
 
-        String pathInfo = req.getPathInfo();
+        String uri = req.getRequestURI();   // e.g. /order/1001
+        String contextPath = req.getContextPath(); // usually ""
+        String path = uri.substring(contextPath.length());
 
-        if (pathInfo == null || pathInfo.equals("/") || pathInfo.trim().isEmpty()) {
-            resp.getWriter().print("Error: order id is required");
+        String prefix = "/order/";
+        if (!path.startsWith(prefix) || path.length() <= prefix.length()) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().print("Error: invalid order id");
             return;
         }
 
-        String idStr = pathInfo.substring(1); // 去掉前面的 "/"
+        String idText = path.substring(prefix.length()).trim();
 
-        int orderId;
+        int id;
         try {
-            orderId = Integer.parseInt(idStr);
+            id = Integer.parseInt(idText);
         } catch (NumberFormatException e) {
-            resp.getWriter().print("Error: order id must be a valid number");
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().print("Error: invalid order id");
             return;
         }
 
-        List<Order> orderList = getOrInitOrderList();
-        Order target = null;
-
-        for (Order order : orderList) {
-            if (order.getId() == orderId) {
-                target = order;
-                break;
-            }
-        }
-
-        if (target == null) {
+        Order order = Order.findById(id);
+        if (order == null) {
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             resp.getWriter().print("Error: order not found");
             return;
         }
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("Order Detail\n\n");
-        sb.append("Order ID: ").append(target.getId()).append("\n");
-        sb.append("Customer: ").append(target.getCustomer()).append("\n");
-        sb.append("Food: ").append(target.getFood()).append("\n");
-        sb.append("Quantity: ").append(target.getQuantity());
-
-        resp.getWriter().print(sb.toString());
-    }
-
-    @SuppressWarnings("unchecked")
-    private List<Order> getOrInitOrderList() {
-        ServletContext context = getServletContext();
-        List<Order> orderList = (List<Order>) context.getAttribute("orderList");
-
-        if (orderList == null) {
-            synchronized (context) {
-                orderList = (List<Order>) context.getAttribute("orderList");
-                if (orderList == null) {
-                    orderList = new ArrayList<>();
-                    context.setAttribute("orderList", orderList);
-                }
-            }
-        }
-        return orderList;
+        resp.getWriter().print(
+                "Order Detail\n" +
+                        "Order ID: " + order.getId() + "\n" +
+                        "Customer: " + order.getCustomer() + "\n" +
+                        "Food: " + order.getFood() + "\n" +
+                        "Quantity: " + order.getQuantity()
+        );
     }
 }

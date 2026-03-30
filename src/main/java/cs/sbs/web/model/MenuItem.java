@@ -1,12 +1,8 @@
 package cs.sbs.web.model;
 
 public class MenuItem {
-
     private String name;
     private int price;
-
-    public MenuItem(){
-    }
 
     public MenuItem(String name, int price) {
         this.name = name;
@@ -17,21 +13,7 @@ public class MenuItem {
         return name;
     }
 
-    public void setName(String name){
-        this.name = name;
-    }
-
-    public int getPrice(){
+    public int getPrice() {
         return price;
     }
-
-    public void setPrice(int price){
-        this.price = price;
-    }
-
-    @Override
-    public String toString(){
-        return name + " - $" + price;
-    }
-
 }

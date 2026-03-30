@@ -4,7 +4,7 @@
          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
          version="5.0">
 
-    <display-name>外卖订单管理系统</display-name>
+    <display-name>Food Order System</display-name>
 
     <welcome-file-list>
         <welcome-file>order.html</welcome-file>
@@ -14,6 +14,7 @@
         <servlet-name>MenuListServlet</servlet-name>
         <servlet-class>cs.sbs.web.servlet.MenuListServlet</servlet-class>
     </servlet>
+
     <servlet-mapping>
         <servlet-name>MenuListServlet</servlet-name>
         <url-pattern>/menu</url-pattern>
@@ -23,6 +24,7 @@
         <servlet-name>OrderCreateServlet</servlet-name>
         <servlet-class>cs.sbs.web.servlet.OrderCreateServlet</servlet-class>
     </servlet>
+
     <servlet-mapping>
         <servlet-name>OrderCreateServlet</servlet-name>
         <url-pattern>/order</url-pattern>
@@ -32,6 +34,7 @@
         <servlet-name>OrderDetailServlet</servlet-name>
         <servlet-class>cs.sbs.web.servlet.OrderDetailServlet</servlet-class>
     </servlet>
+
     <servlet-mapping>
         <servlet-name>OrderDetailServlet</servlet-name>
         <url-pattern>/order/*</url-pattern>
