@@ -1,7 +1,6 @@
 package cs.sbs.web.model;
 
 public class MenuItem {
-
     private String name;
     private int price;
 
@@ -10,4 +9,11 @@ public class MenuItem {
         this.price = price;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public int getPrice() {
+        return price;
+    }
 }
